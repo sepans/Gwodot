@@ -1,0 +1,366 @@
+<html>
+<head>
+	<title>Waiting for Gwodot -Rhizome</title>
+		
+	<script type="text/javascript" src="js/jquery-1.4.4.js"></script>
+	<script type="text/javascript" src="js/jquery.window.min.js"></script>
+	<script src="js/wikify.js" type="text/javascript"></script>
+	<link href="css/jquery.window.css" rel="stylesheet" type="text/css"/>
+	
+	<link rel="stylesheet" href="/css/wikify.css" type="text/css">
+
+<!--	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>-->
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<style type="text/css">
+		body { background-color: #FFF; padding: 0; margin: 0; color: #000; font-family:Lucida Console, Monaco, sans-serif; }
+		#container {margin: 0 auto; position: relative;}
+		.underground { border-bottom: 1px solid #FFF;  }
+		h1,h2 {font-size: 12px; font-weight: normal; display: inline; padding: 0 10px;}
+		a, a:visited {color: #000; text-decoration: none;}
+		
+		.window_panel .window_header { border: 1px solid #000 !important; background-color: #FFF;}
+		.ui-widget-header { border: 1px solid #000 !important; background-color: #FFF;}
+		
+		#desc_window { }
+		.window_container {padding: 10px; font-size: 12px;  background-color: #FFF; color: #000;}
+		.loading { margin: 100px 180px;}
+		.defulat-link-color a {color: #00FFFF; }
+		.defulat-link-color a:visited {color: #800080 ;}
+		.footnote { font-size: 10px; border-top: 1px solid black;}
+	
+	</style>
+	<script type="text/javascript">
+	var descriptionWindow = [];
+	function getContentByIndex(i, changeToWiki)
+	{
+		var window_content;
+		if(i%4==0)
+			window_content =   (changeToWiki) ? $("#wiki_window").html() : $("#desc_window").html();
+		else if(i%4==1)
+			window_content =   $("#desc_swap20").html();
+		else if(i%4==2)
+			window_content =   $("#desc_swap50").html();
+		else if(i%4==3)
+			window_content =   $("#desc_swap100").html();
+		else
+			window_content =   (changeToWiki) ? $("#wiki_window").html() : $("#desc_window").html();
+			
+		return window_content;
+	}
+	function openDescription() {
+	for( var i=0; i<10; i++ ) {
+
+		var window_content=getContentByIndex(i,false);
+
+      descriptionWindow[i] = $.window({
+         title: "Act "+(i+1),
+         content: window_content,
+		width: 400,
+		height: 600,
+		x: 420*i,
+		y: 40 ,  
+      });
+	  addTooltipsToAllLinks($(descriptionWindow[i].getContent())) ;
+   }
+	for( var i=0; i<20; i++ ) {
+
+   	  var time = (Math.floor(Math.random()*30))*1000+3000;
+	  setTimeout(function(){startLoading(i,time);},time);
+	}
+	return false;
+	}
+	
+	function startLoading(index,time)
+	{
+		
+		var window = Math.floor(Math.random()*10);
+		var window_content=getContentByIndex(window,true);
+		descriptionWindow[window].setContent('<img src="/images/loading.gif" class="loading"/>');
+		//descriptionWindow[0].getContent()).css('display','none')
+		setTimeout(function(){descriptionWindow[window].setContent(window_content);},2000);
+		
+	}
+
+	function openTimeline() {
+	$.window({
+		title: "",
+		showModal: true,
+		modalOpacity: 0.5,
+		width: 650,
+		height: 400,
+		x: 300,
+		y: 200,
+		content: $("#timeline_window").html(),
+	});
+	return false;
+	}
+		function openRelated() {
+	$.window({
+		title: "",
+		showModal: true,
+		modalOpacity: 0.5,
+		width: 300,
+		height: 200,
+		x: 100,
+		y: 50,
+		content: $("#related_window").html(),
+	});
+	return false;
+	}
+	function openResume() {
+	$.window({
+		title: "sepans.com",
+		showModal: true,
+		modalOpacity: 0.5,
+		width: 1000,
+		height: 680,
+		x: 50,
+		y: 50,
+		url: 'http://sepans.com/sp',
+	});
+	return false;
+	}
+	</script>
+</head>
+<body>
+	<div id="container">
+		<img class="underground" src="images/background.png" alt="underground"/><br/>
+		<h1>WAITING FOR GWODOT - A Tragicomedy in HTML</h1>-
+		<h2><a href="#" onclick="openDescription();">Description</a></h2>|
+		<h2><a href="http://sepans.com/sp/works/waiting-for-gwodo/" target="_new">Past Experiments</a></h2>| 
+		<h2><a href="#" onclick="openRelated();">Related Projects</a></h2>| <br/>
+		<span style="margin-left: 320px;">&nbsp;</span><h2><a href="#" onclick="openTimeline();">Timeline &amp; Budget</a></h2>|
+		<h2><a href="#" onclick="openRelated();">Related Projects</a></h2>|
+		<h2><a href="#" onclick="openResume();">About</a></h2>
+
+	</div>
+	<div id="video_window" style="display:none">
+		<div class="window_container">
+			<iframe width="640" height="390" src="http://www.youtube.com/embed/n4oMcdK-2kA?rel=0" frameborder="0" allowfullscreen></iframe>
+		</div>
+	</div>
+	<div id="tineline_window" style="display:none">
+		<div class="window_container">
+			Timeline
+		</div>
+	</div>
+	<div id="desc_window" style="display:none">
+		<div class="window_container">
+			<p>‘Waiting for Gwodot’ is an attempt to appropriate Samuel Beckett’s play for cyberspace by narrating it using web technologies and natural language processing tools.</p>
+			<p>The production of Beckett’s work using other media like cinema was followed by disapproval by many critics. But even reading the original play itself while being connected to the Internet, which is happening more often day after day, changes the experience of reading completely. Depending on information retrieval tools to grasp meaning is inevitable while reading a text online especially dealing with complexities of Beckett’s works; Tools that are trained how to retrieve based on the behaviors of an average user, not those who read Beckett. Even the retrieved content is usually not created by experts [1].
+<p>This adds another layer of complexity on authorship. While being amidst this amount of anonymously and publicly constructed interpretations how it is possible to get to the original complexities of text?</p>
+			<p>‘Waiting for Godot’ is also about time, recurrence and waiting. In ‘Waiting for Gwodot’ I want to illustrate the temporality  in cyberspace and our experience of time through our anxieties, the quest for authenticity in a promiscuously public domain and saving power of engagement with technology, using Beckett’s imagery and rhetoric.</p>
+			<p>Using natural language processing techniques Beckett’s play is combined and regenerated with text retrieved real-time from Internet and collaboratively generated content such as Wikipedia. The reproduction powers of information technology is used to get to the first sentence in the play ‘Nothing to be done.’ not by eliminating all possibilities but by leveling all the distinctive qualities.</p>
+			<p class="footnote">[1]  For instance my online experiments combining ‘Lucky’s Thinking’ part of the play with content from Wikipedia is among the 5 top results when searching for ‘Lucky’s Thinking’ and I get many visitors reading the non-sense I have created to understand what that part means.</p>
+		</div>
+	</div>
+	<div id="wiki_window" style="display:none">
+		<div class="window_container">
+			<span class="defulat-link-color">
+			<p>‘Waiting for Gwodot’ is an <a href="http://www.en.wikipedia.org/wiki/Attempt">attempt</a> to <a href="http://www.en.wikipedia.org/wiki/Morality">appropriate</a> Samuel Beckett’s <a href="http://www.en.wikipedia.org/wiki/Play%20%28theatre%29">play</a> for <a href="http://www.en.wikipedia.org/wiki/Cyberspace">cyberspace</a> by <a href="http://www.en.wikipedia.org/wiki/Narrator">narrating</a> it using <a href="http://www.en.wikipedia.org/wiki/World%20Wide%20Web">web</a> <a href="http://www.en.wikipedia.org/wiki/Technology">technologies</a> and <a href="http://www.en.wikipedia.org/wiki/Natural%20language%20processing">natural language processing</a> <a href="http://www.en.wikipedia.org/wiki/Tool">tools</a>.</p>
+			<p>The production of Beckett’s <a href="http://www.en.wikipedia.org/wiki/Employment">work</a> using other <a href="http://www.en.wikipedia.org/wiki/Mass%20media">media</a> <a href="http://www.en.wikipedia.org/wiki/Like">like</a> <a href="http://www.en.wikipedia.org/wiki/Film">cinema</a> was followed by <a href="http://www.en.wikipedia.org/wiki/Disapproval%20voting">disapproval</a> by many <a href="http://www.en.wikipedia.org/wiki/Critic">critics</a>. But even <a href="http://www.en.wikipedia.org/wiki/Reading%20%28process%29">reading</a> the <a href="http://www.en.wikipedia.org/wiki/Originality">original</a> play itself while being connected to <a href="http://www.en.wikipedia.org/wiki/Internet">the Internet</a>, which is <a href="http://www.en.wikipedia.org/wiki/Happening">happening</a> more often <a href="http://www.en.wikipedia.org/wiki/The%20Day%20After">day after</a> day, changes the <a href="http://www.en.wikipedia.org/wiki/Experience">experience</a> of reading <a href="http://www.en.wikipedia.org/wiki/Completely">completely</a>. Depending on <a href="http://www.en.wikipedia.org/wiki/Information%20retrieval">information retrieval</a> tools to <a href="http://www.en.wikipedia.org/wiki/GRaphics%20Animation%20System%20for%20Professionals">grasp</a> <a href="http://www.en.wikipedia.org/wiki/Meaning%20%28linguistics%29">meaning</a> is inevitable while reading a <a href="http://www.en.wikipedia.org/wiki/Writing">text</a> <a href="http://www.en.wikipedia.org/wiki/Online%20and%20offline">online</a> especially dealing with complexities of Beckett’s <a href="http://www.en.wikipedia.org/wiki/Work%20of%20art">works</a>; Tools that are <a href="http://www.en.wikipedia.org/wiki/Training">trained</a> <a href="http://www.en.wikipedia.org/wiki/How-to">how to</a> retrieve <a href="http://www.en.wikipedia.org/wiki/Holotype">based on</a> the <a href="http://www.en.wikipedia.org/wiki/Behavior">behaviors</a> of <a href="http://www.en.wikipedia.org/wiki/Batting%20average">an average</a> <a href="http://www.en.wikipedia.org/wiki/User%20%28computing%29">user</a>, not those who read <a href="http://www.en.wikipedia.org/wiki/Samuel%20Beckett">Beckett</a>. Even the retrieved <a href="http://www.en.wikipedia.org/wiki/Content%20%28media%20and%20publishing%29">content</a> is <a href="http://www.en.wikipedia.org/wiki/Convention%20%28norm%29">usually</a> not <a href="http://www.en.wikipedia.org/wiki/Creation%20myth">created</a> by <a href="http://www.en.wikipedia.org/wiki/Expert">experts</a>[1].
+			<p>This adds another layer of complexity on authorship. While being amidst this amount of anonymously and publicly constructed interpretations how it is possible to get to the original complexities of text?</p>
+			<p>‘Waiting for Godot’ is also about <a href="http://www.en.wikipedia.org/wiki/Time%20%28magazine%29">time</a>, recurrence and waiting. In ‘Waiting for Gwodot’ I <a href="http://www.en.wikipedia.org/wiki/Want%20To">want to</a> <a href="http://www.en.wikipedia.org/wiki/Illustration">illustrate</a> the <a href="http://www.en.wikipedia.org/wiki/Temporality">temporality</a> in cyberspace and our experience of time through our <a href="http://www.en.wikipedia.org/wiki/Anxiety">anxieties</a>, the <a href="http://www.en.wikipedia.org/wiki/Quest">quest</a> for <a href="http://www.en.wikipedia.org/wiki/Authentication">authenticity</a> in a promiscuously <a href="http://www.en.wikipedia.org/wiki/Public%20domain">public domain</a> and <a href="http://www.en.wikipedia.org/wiki/Saving">saving</a> <a href="http://www.en.wikipedia.org/wiki/Power%20%28philosophy%29">power</a> of <a href="http://www.en.wikipedia.org/wiki/Engagement">engagement</a> with technology, using Beckett’s <a href="http://www.en.wikipedia.org/wiki/Imagery%20%28disambiguation%29">imagery</a> and <a href="http://www.en.wikipedia.org/wiki/Rhetoric">rhetoric</a>.</p>
+			<p>Using natural language processing <a href="http://www.en.wikipedia.org/wiki/Kimarite">techniques</a> Beckett’s play is <a href="http://www.en.wikipedia.org/wiki/Alpine%20skiing%20combined">combined</a> and <a href="http://www.en.wikipedia.org/wiki/Regeneration%20%28biology%29">regenerated</a> with text retrieved <a href="http://www.en.wikipedia.org/wiki/Real-time%20computing">real-time</a> from Internet and <a href="http://www.en.wikipedia.org/wiki/Collaboration">collaboratively</a> <a href="http://www.en.wikipedia.org/wiki/Generating%20set%20of%20a%20group">generated</a> content such as Wikipedia. The <a href="http://www.en.wikipedia.org/wiki/Reproduction">reproduction</a> <a href="http://www.en.wikipedia.org/wiki/Power%20in%20international%20relations">powers</a> of <a href="http://www.en.wikipedia.org/wiki/Information%20technology">information technology</a> is <a href="http://www.en.wikipedia.org/wiki/Used%20good">used</a> to get to the first <a href="http://www.en.wikipedia.org/wiki/Sentence%20%28linguistics%29">sentence</a> in the play ‘Nothing to be done.<a href="http://www.en.wikipedia.org/wiki/Apostrophe">’</a> not by eliminating all <a href="http://www.en.wikipedia.org/wiki/Possibilities">possibilities</a> but by <a href="http://www.en.wikipedia.org/wiki/Experience%20point">leveling</a> all the distinctive qualities. </p>
+			<p class="footnote">[1]  For <a href="http://www.en.wikipedia.org/wiki/Object%20%28computer%20science%29">instance</a> my <a href="http://www.en.wikipedia.org/wiki/Web-based%20experiments">online experiments</a> <a href="http://www.en.wikipedia.org/wiki/Combining%20character">combining</a> ‘Lucky’s Thinking’ <a href="http://www.en.wikipedia.org/wiki/Countries%20of%20the%20United%20Kingdom">part of</a> <a href="http://www.en.wikipedia.org/wiki/The%20Play">the play</a> with content from <a href="http://www.en.wikipedia.org/wiki/Wikipedia">Wikipedia</a> is among the 5 top <a href="http://www.en.wikipedia.org/wiki/Results">results</a> when <a href="http://www.en.wikipedia.org/wiki/Search%20algorithm">searching</a> for ‘Lucky’s Thinking’ <a href="http://www.en.wikipedia.org/wiki/And%20I">and I</a> get many <a href="http://www.en.wikipedia.org/wiki/Tourism">visitors</a> reading the <a href="http://www.en.wikipedia.org/wiki/Nonsense">non-sense</a> I have created to <a href="http://www.en.wikipedia.org/wiki/Understanding">understand</a> what that part means.</p></p>
+			<p>Text Wikified by <a href="http://wdm.cs.waikato.ac.nz:8080" target="_new">Wikipedia Miner</a></p>
+			</span>
+		</div>
+	</div>
+	
+		<div id="desc_swap20" style="display:none">
+		<div class="window_container">
+<p>Waiting for <span style="color: #FF00FF" title="Gwodot">Boy</span> is an attempt to appropriate Samuel Becketts play for <span style="color: #FF00FF" title="cyberspace">thing</span> by narrating it <span style="color: #FF00FF" title="using">having</span> <span style="color: #FF00FF" title="web">dance</span> technologies and natural
+ <span style="color: #FF00FF" title="language">bone</span> <span style="color: #FF00FF" title="processing">boot</span> tools.</p>
+<p>The production of Becketts work <span style="color: #FF00FF" title="using">having</span> other media like cinema was <span style="color: #FF00FF" title="followed">asked</span> by disapproval by many critics. But even <span style="color: #FF00FF" title="reading">hat</span> the original
+ play itself while being <span style="color: #FF00FF" title="connected">decided</span> to the Internet, which is <span style="color: #FF00FF" title="happening">beginning</span> more often day after day, changes the <span style="color: #FF00FF" title="experience">return</span> of <span style="color: #FF00FF" title="reading">hat</span>
+
+ completely. <span style="color: #FF00FF" title="Depending">Going</span> on <span style="color: #FF00FF" title="information">notice</span> retrieval tools to <span style="color: #FF00FF" title="grasp">save</span> meaning is inevitable while <span style="color: #FF00FF" title="reading">hat</span> a <span style="color: #FF00FF" title="text">pozzo</span> online especially <span style="color: #FF00FF" title="dealing">arriving</span> with
+ complexities of Becketts works; Tools that are <span style="color: #FF00FF" title="trained">wanted</span> how to <span style="color: #FF00FF" title="retrieve">arrive</span> <span style="color: #FF00FF" title="based">leaved</span> on the behaviors of an average user, not those who <span style="color: #FF00FF" title="read">wait</span>
+
+ <span style="color: #FF00FF" title="Beckett">Estragon</span>. Even the <span style="color: #FF00FF" title="retrieved">tried</span> content is usually not <span style="color: #FF00FF" title="created">slept</span> by experts [1].</p>
+<p>This <span style="color: #FF00FF" title="adds">appears</span> another layer of <span style="color: #FF00FF" title="complexity">–</span> on authorship. While being amidst this amount of anonymously and publicly <span style="color: #FF00FF" title="constructed">found</span> interpretations
+ how it is possible to get to the original complexities of <span style="color: #FF00FF" title="text">pozzo</span>?</p>
+<p>Waiting for Godot is also about time, <span style="color: #FF00FF" title="recurrence">suicide</span> and waiting. In Waiting for <span style="color: #FF00FF" title="Gwodot">Boy</span> I want to illustrate the temporality  in <span style="color: #FF00FF" title="cyberspace">thing</span> and
+ our <span style="color: #FF00FF" title="experience">return</span> of time through our anxieties, the quest for authenticity in a promiscuously public domain and <span style="color: #FF00FF" title="saving">remembering</span> <span style="color: #FF00FF" title="power">end</span> of engagement
+ with <span style="color: #FF00FF" title="technology">pair</span>, <span style="color: #FF00FF" title="using">having</span> Becketts <span style="color: #FF00FF" title="imagery">slave</span> and rhetoric.</p>
+
+<p><span style="color: #FF00FF" title="Using">Having</span> natural <span style="color: #FF00FF" title="language">bone</span> <span style="color: #FF00FF" title="processing">boot</span> techniques Becketts play is <span style="color: #FF00FF" title="combined">led</span> and regenerated with <span style="color: #FF00FF" title="text">pozzo</span> <span style="color: #FF00FF" title="retrieved">tried</span> real-time from Internet and
+ collaboratively <span style="color: #FF00FF" title="generated">took</span> content such as Wikipedia. The reproduction powers of <span style="color: #FF00FF" title="information">notice</span> <span style="color: #FF00FF" title="technology">pair</span> is <span style="color: #FF00FF" title="used">compel</span> to get to the first <span style="color: #FF00FF" title="sentence">event</span>
+
+ in the play Nothing to be done. not by <span style="color: #FF00FF" title="eliminating">asking</span> all possibilities but by leveling all the distinctive qualities.</p>
+ 
+ <br/><p>Text transformed by swapping 20 words with Wikipedia article on 'Waiting for Godot' based on their usage.</p>
+
+		</div>
+	</div>
+	
+			<div id="desc_swap50" style="display:none">
+		<div class="window_container">
+<p><span style="color: #FF00FF" title="Waiting">Trying</span> for <span style="color: #FF00FF" title="Gwodot">Boy</span> is an attempt to appropriate Samuel Becketts <span style="color: #FF00FF" title="play">agree</span> for <span style="color: #FF00FF" title="cyberspace">thing</span> by <span style="color: #FF00FF" title="narrating">money</span> it <span style="color: #FF00FF" title="using">having</span> <span style="color: #FF00FF" title="web">dance</span> technologies and natural
+ <span style="color: #FF00FF" title="language">bone</span> <span style="color: #FF00FF" title="processing">boot</span> tools.</p>
+<p>The <span style="color: #FF00FF" title="production">position</span> of Becketts work <span style="color: #FF00FF" title="using">having</span> other <span style="color: #FF00FF" title="media">—</span> like <span style="color: #FF00FF" title="cinema">consciousness</span> <span style="color: #FF00FF" title="was"></span> <span style="color: #FF00FF" title="followed">asked</span> by <span style="color: #FF00FF" title="disapproval">recognise</span> by many critics. But even <span style="color: #FF00FF" title="reading">hat</span> the original
+ <span style="color: #FF00FF" title="play">agree</span> itself while <span style="color: #FF00FF" title="being">asking</span> <span style="color: #FF00FF" title="connected">decided</span> to the Internet, which is <span style="color: #FF00FF" title="happening">beginning</span> more often day after day, changes the <span style="color: #FF00FF" title="experience">return</span> of <span style="color: #FF00FF" title="reading">hat</span>
+ completely. <span style="color: #FF00FF" title="Depending">Going</span> on <span style="color: #FF00FF" title="information">notice</span> <span style="color: #FF00FF" title="retrieval">claim</span> tools to <span style="color: #FF00FF" title="grasp">save</span> <span style="color: #FF00FF" title="meaning">fall</span> is inevitable while <span style="color: #FF00FF" title="reading">hat</span> a <span style="color: #FF00FF" title="text">pozzo</span> online especially <span style="color: #FF00FF" title="dealing">arriving</span> with
+ complexities of Becketts works; Tools that are <span style="color: #FF00FF" title="trained">wanted</span> how to <span style="color: #FF00FF" title="retrieve">arrive</span> <span style="color: #FF00FF" title="based">leaved</span> on the behaviors of an average <span style="color: #FF00FF" title="user">relation</span>, not those who <span style="color: #FF00FF" title="read">wait</span>
+ <span style="color: #FF00FF" title="Beckett">Estragon</span>. Even the <span style="color: #FF00FF" title="retrieved">tried</span> <span style="color: #FF00FF" title="content">world</span> is usually not <span style="color: #FF00FF" title="created">slept</span> by experts [1].</p>
+<p>This <span style="color: #FF00FF" title="adds">appears</span> another <span style="color: #FF00FF" title="layer">comment</span> of <span style="color: #FF00FF" title="complexity">–</span> on <span style="color: #FF00FF" title="authorship">reference</span>. While <span style="color: #FF00FF" title="being">asking</span> amidst this <span style="color: #FF00FF" title="amount">head</span> of anonymously and publicly <span style="color: #FF00FF" title="constructed">found</span> interpretations
+ how it is possible to get to the original complexities of <span style="color: #FF00FF" title="text">pozzo</span>?</p>
+<p><span style="color: #FF00FF" title="Waiting">Trying</span> for Godot is also about time, <span style="color: #FF00FF" title="recurrence">suicide</span> and <span style="color: #FF00FF" title="waiting">trying</span>. In <span style="color: #FF00FF" title="Waiting">Trying</span> for <span style="color: #FF00FF" title="Gwodot">Boy</span> I want to <span style="color: #FF00FF" title="illustrate">fail</span> the <span style="color: #FF00FF" title="temporality">recollection</span>  in <span style="color: #FF00FF" title="cyberspace">thing</span> and
+ our <span style="color: #FF00FF" title="experience">return</span> of time through our anxieties, the <span style="color: #FF00FF" title="quest">progression</span> for <span style="color: #FF00FF" title="authenticity">peer</span> in a <span style="color: #FF00FF" title="promiscuously">evidence</span> public <span style="color: #FF00FF" title="domain">struggle</span> and <span style="color: #FF00FF" title="saving">remembering</span> <span style="color: #FF00FF" title="power">end</span> of <span style="color: #FF00FF" title="engagement">tree</span>
+ with <span style="color: #FF00FF" title="technology">pair</span>, <span style="color: #FF00FF" title="using">having</span> Becketts <span style="color: #FF00FF" title="imagery">slave</span> and <span style="color: #FF00FF" title="rhetoric">men</span>.</p>
+<p><span style="color: #FF00FF" title="Using">Having</span> natural <span style="color: #FF00FF" title="language">bone</span> <span style="color: #FF00FF" title="processing">boot</span> techniques Becketts <span style="color: #FF00FF" title="play">agree</span> is <span style="color: #FF00FF" title="combined">led</span> and <span style="color: #FF00FF" title="regenerated">insight</span> with <span style="color: #FF00FF" title="text">pozzo</span> <span style="color: #FF00FF" title="retrieved">tried</span> real-time from Internet and
+ <span style="color: #FF00FF" title="collaboratively">song</span> <span style="color: #FF00FF" title="generated">took</span> <span style="color: #FF00FF" title="content">world</span> such as <span style="color: #FF00FF" title="Wikipedia">Radish</span>. The <span style="color: #FF00FF" title="reproduction">master</span> powers of <span style="color: #FF00FF" title="information">notice</span> <span style="color: #FF00FF" title="technology">pair</span> is <span style="color: #FF00FF" title="used">compel</span> to get to the first <span style="color: #FF00FF" title="sentence">event</span>
+ in the <span style="color: #FF00FF" title="play">agree</span> Nothing to be <span style="color: #FF00FF" title="done">provided</span>. not by <span style="color: #FF00FF" title="eliminating">asking</span> all possibilities but by <span style="color: #FF00FF" title="leveling">opportunity</span> all the distinctive qualities.</p>
+
+ <br/><p>Text transformed by swapping 50 words with Wikipedia article on 'Waiting for Godot' based on their usage.</p>
+
+		</div>
+	</div>
+	
+				<div id="desc_swap100" style="display:none">
+		<div class="window_container">
+<p><span style="color: #FF00FF" title="Waiting">Trying</span> for <span style="color: #FF00FF" title="Gwodot">Boy</span> is an <span style="color: #FF00FF" title="attempt"><span style="color: #FF00FF" title="skill"><span style="color: #FF00FF" title="food"><span style="color: #FF00FF" title="tear"><span style="color: #FF00FF" title="allusion">acquaintance</span></span></span></span></span> to appropriate Samuel Becketts <span style="color: #FF00FF" title="play">agree</span> for <span style="color: #FF00FF" title="cyberspace">thing</span> by <span style="color: #FF00FF" title="narrating">money</span> it <span style="color: #FF00FF" title="using">having</span> <span style="color: #FF00FF" title="web">dance</span> technologies and natural
+ <span style="color: #FF00FF" title="language">bone</span> <span style="color: #FF00FF" title="processing">boot</span> tools.
+<p>The <span style="color: #FF00FF" title="production">position</span> of Becketts work <span style="color: #FF00FF" title="using">having</span> other <span style="color: #FF00FF" title="media">—</span> like <span style="color: #FF00FF" title="cinema"><span style="color: #FF00FF" title="consciousness"><span style="color: #FF00FF" title="character"><span style="color: #FF00FF" title="game"><span style="color: #FF00FF" title="herald"><span style="color: #FF00FF" title="idea">nature</span></span></span></span></span></span> <span style="color: #FF00FF" title="was"></span> <span style="color: #FF00FF" title="followed">asked</span> by <span style="color: #FF00FF" title="disapproval">recognise</span> by many critics. But even <span style="color: #FF00FF" title="reading">hat</span> the original
+ <span style="color: #FF00FF" title="play">agree</span> itself while <span style="color: #FF00FF" title="being">asking</span> <span style="color: #FF00FF" title="connected">decided</span> to the Internet, which is <span style="color: #FF00FF" title="happening">beginning</span> more often day after day, changes the <span style="color: #FF00FF" title="experience">return</span> of <span style="color: #FF00FF" title="reading">hat</span>
+ completely. <span style="color: #FF00FF" title="Depending">Going</span> on <span style="color: #FF00FF" title="information">notice</span> <span style="color: #FF00FF" title="retrieval">claim</span> tools to <span style="color: #FF00FF" title="grasp">save</span> <span style="color: #FF00FF" title="meaning">fall</span> is inevitable while <span style="color: #FF00FF" title="reading">hat</span> a <span style="color: #FF00FF" title="text">pozzo</span> online especially <span style="color: #FF00FF" title="dealing">arriving</span> with
+ complexities of Becketts works; Tools that are <span style="color: #FF00FF" title="trained">wanted</span> how to <span style="color: #FF00FF" title="retrieve">arrive</span> <span style="color: #FF00FF" title="based">leaved</span> on the behaviors of an average <span style="color: #FF00FF" title="user"><span style="color: #FF00FF" title="relation"><span style="color: #FF00FF" title="swap"><span style="color: #FF00FF" title="bit"><span style="color: #FF00FF" title="carnivalesque">trouser</span></span></span></span></span>, not those who <span style="color: #FF00FF" title="read">wait</span>
+ <span style="color: #FF00FF" title="Beckett">Estragon</span>. Even the <span style="color: #FF00FF" title="retrieved">tried</span> <span style="color: #FF00FF" title="content"><span style="color: #FF00FF" title="world"><span style="color: #FF00FF" title="someone"><span style="color: #FF00FF" title="encounter"><span style="color: #FF00FF" title="meal">heavily-laden</span></span></span></span></span> is usually not <span style="color: #FF00FF" title="created">slept</span> by experts [1].
+<p>This <span style="color: #FF00FF" title="adds">appears</span> another <span style="color: #FF00FF" title="layer"><span style="color: #FF00FF" title="comment"><span style="color: #FF00FF" title="move"><span style="color: #FF00FF" title="interrogation"><span style="color: #FF00FF" title="bay"><span style="color: #FF00FF" title="protestations">entertainment</span></span></span></span></span></span> of <span style="color: #FF00FF" title="complexity">–</span> on <span style="color: #FF00FF" title="authorship">reference</span>. While <span style="color: #FF00FF" title="being">asking</span> amidst this <span style="color: #FF00FF" title="amount">head</span> of anonymously and publicly <span style="color: #FF00FF" title="constructed">found</span> interpretations
+ how it is possible to get to the original complexities of <span style="color: #FF00FF" title="text">pozzo</span>?
+<span style="color: #FF00FF" title="Waiting">Trying</span> for Godot is also about time, <span style="color: #FF00FF" title="recurrence">suicide</span> and <span style="color: #FF00FF" title="waiting">trying</span>. In <span style="color: #FF00FF" title="Waiting">Trying</span> for <span style="color: #FF00FF" title="Gwodot">Boy</span> I want to <span style="color: #FF00FF" title="illustrate">fail</span> the <span style="color: #FF00FF" title="temporality"><span style="color: #FF00FF" title="recollection"><span style="color: #FF00FF" title="bleaknes"><span style="color: #FF00FF" title="foot"><span style="color: #FF00FF" title="realise">surrounding</span></span></span></span></span>  in <span style="color: #FF00FF" title="cyberspace">thing</span> and
+ our <span style="color: #FF00FF" title="experience">return</span> of time through our anxieties, the <span style="color: #FF00FF" title="quest">progression</span> for <span style="color: #FF00FF" title="authenticity">peer</span> in a <span style="color: #FF00FF" title="promiscuously">evidence</span> public <span style="color: #FF00FF" title="domain">struggle</span> and <span style="color: #FF00FF" title="saving">remembering</span> <span style="color: #FF00FF" title="power">end</span> of <span style="color: #FF00FF" title="engagement">tree</span>
+ with <span style="color: #FF00FF" title="technology">pair</span>, <span style="color: #FF00FF" title="using">having</span> Becketts <span style="color: #FF00FF" title="imagery">slave</span> and <span style="color: #FF00FF" title="rhetoric">men</span>.
+<p><span style="color: #FF00FF" title="Using">Having</span> natural <span style="color: #FF00FF" title="language">bone</span> <span style="color: #FF00FF" title="processing">boot</span> techniques Becketts <span style="color: #FF00FF" title="play">agree</span> is <span style="color: #FF00FF" title="combined">led</span> and <span style="color: #FF00FF" title="regenerated"><span style="color: #FF00FF" title="insight"><span style="color: #FF00FF" title="hall"><span style="color: #FF00FF" title="birth"><span style="color: #FF00FF" title="audience"><span style="color: #FF00FF" title="sign">messenger</span></span></span></span></span></span> with <span style="color: #FF00FF" title="text">pozzo</span> <span style="color: #FF00FF" title="retrieved">tried</span> real-time from Internet and
+ <span style="color: #FF00FF" title="collaboratively">song</span> <span style="color: #FF00FF" title="generated">took</span> <span style="color: #FF00FF" title="content"><span style="color: #FF00FF" title="world"><span style="color: #FF00FF" title="someone"><span style="color: #FF00FF" title="encounter"><span style="color: #FF00FF" title="meal">heavily-laden</span></span></span></span></span> such as <span style="color: #FF00FF" title="Wikipedia">Radish</span>. The <span style="color: #FF00FF" title="reproduction">master</span> powers of <span style="color: #FF00FF" title="information">notice</span> <span style="color: #FF00FF" title="technology">pair</span> is <span style="color: #FF00FF" title="used">compel</span> to get to the first <span style="color: #FF00FF" title="sentence">event</span>
+ in the <span style="color: #FF00FF" title="play">agree</span> <span style="color: #FF00FF" title="Nothing"><span style="color: #FF00FF" title="Exchange"><span style="color: #FF00FF" title="Scene"><span style="color: #FF00FF" title="Evince"><span style="color: #FF00FF" title="Attenuated">Proceeding</span></span></span></span></span> to be <span style="color: #FF00FF" title="done">provided</span>. not by <span style="color: #FF00FF" title="eliminating">asking</span> all possibilities but by <span style="color: #FF00FF" title="leveling">opportunity</span> all the distinctive qualities.</p>
+
+ <br/><p>Text transformed by swapping 100 words with Wikipedia article on 'Waiting for Godot' based on their usage.</p>
+
+ </div>
+	</div>
+		<div id="timeline_window" style="display:none">
+		<div class="window_container">
+		<h3>Timeline</h3>
+			<p>07/2011 – 08/2011: Experimenting different NLP concepts<br/>
+			Experimenting different NLP tools such as Markov text generation, statistical categorization, Vector space model, etc.</p>
+
+			<p>08/2011 – 10/2011: UI Design and Implementation<br/>
+			Finalizing implementation using live feed from web.</p>
+<p>10/2011 – Deployment<br/>
+           Deploying code on server.</p>
+
+<h3>Budget</h3>
+<p>Programming/Design: $2500
+<p>Hosting: $400
+<p>Total: $2900
+		   
+		</div>
+	</div>
+	<div id="related_window" style="display:none">
+		<div class="window_container">
+			<p><a href="http://sepans.com/sp/works/wikistalker/" target="_new">Wikistalker</a>
+		</div>
+	</div>
+	<div id="tooltip" class="ui-corner-all">
+<div class="loading"></div>
+</div>
+	
+	<script type="text/javascript">
+	var idsByTitle = new Array() ;			
+						
+				idsByTitle["Natural language processing".toLowerCase()] = 21652 ;
+				idsByTitle["Information technology".toLowerCase()] = 15340 ;
+				idsByTitle["Convention (norm)".toLowerCase()] = 7830 ;
+				idsByTitle["Technology".toLowerCase()] = 29816 ;
+				idsByTitle["Public domain".toLowerCase()] = 18935551 ;
+				idsByTitle["Rhetoric".toLowerCase()] = 25447 ;
+				idsByTitle["Experiment".toLowerCase()] = 59861 ;
+				idsByTitle["Information retrieval".toLowerCase()] = 15271 ;
+				idsByTitle["Natural language".toLowerCase()] = 21173 ;
+				idsByTitle["Morality".toLowerCase()] = 43254 ;
+				idsByTitle["Cyberspace".toLowerCase()] = 7381 ;
+				idsByTitle["Collaboration".toLowerCase()] = 303330 ;
+				idsByTitle["Writing".toLowerCase()] = 32977 ;
+				idsByTitle["Imagery (disambiguation)".toLowerCase()] = 21853363 ;
+				idsByTitle["Expert".toLowerCase()] = 9892 ;
+				idsByTitle["World Wide Web".toLowerCase()] = 33139 ;
+				idsByTitle["Internet".toLowerCase()] = 14539 ;
+				idsByTitle["Experience".toLowerCase()] = 297724 ;
+				idsByTitle["Information".toLowerCase()] = 18985062 ;
+				idsByTitle["Meaning (linguistics)".toLowerCase()] = 4100885 ;
+				idsByTitle["Language".toLowerCase()] = 17524 ;
+				idsByTitle["Wikipedia".toLowerCase()] = 5043734 ;
+				idsByTitle["Nature".toLowerCase()] = 21830 ;
+				idsByTitle["Behavior".toLowerCase()] = 4805 ;
+				idsByTitle["Samuel Beckett".toLowerCase()] = 27640 ;
+				idsByTitle["Online and offline".toLowerCase()] = 41440 ;
+				idsByTitle["Anxiety".toLowerCase()] = 922 ;
+				idsByTitle["Sense".toLowerCase()] = 21280395 ;
+				idsByTitle["Sentence (linguistics)".toLowerCase()] = 870352 ;
+				idsByTitle["Understanding".toLowerCase()] = 216180 ;
+				idsByTitle["Critic".toLowerCase()] = 161227 ;
+				idsByTitle["Reading (process)".toLowerCase()] = 18581264 ;
+				idsByTitle["Mass media".toLowerCase()] = 19641 ;
+				idsByTitle["Power (philosophy)".toLowerCase()] = 147885 ;
+				idsByTitle["Time (magazine)".toLowerCase()] = 31600 ;
+				idsByTitle["Nonsense".toLowerCase()] = 387403 ;
+				idsByTitle["Apostrophe".toLowerCase()] = 59126 ;
+				idsByTitle["Experience point".toLowerCase()] = 215107 ;
+				idsByTitle["Happening".toLowerCase()] = 144048 ;
+				idsByTitle["Narrator".toLowerCase()] = 154707 ;
+				idsByTitle["Illustration".toLowerCase()] = 247107 ;
+				idsByTitle["Training".toLowerCase()] = 156423 ;
+				idsByTitle["How-to".toLowerCase()] = 175502 ;
+				idsByTitle["Play (theatre)".toLowerCase()] = 22962 ;
+				idsByTitle["Object (computer science)".toLowerCase()] = 169665 ;
+				idsByTitle["Real-time computing".toLowerCase()] = 25767 ;
+				idsByTitle["Language processing".toLowerCase()] = 1732213 ;
+				idsByTitle["Average".toLowerCase()] = 60167 ;
+				idsByTitle["Tool".toLowerCase()] = 30677 ;
+				idsByTitle["Creation myth".toLowerCase()] = 7322 ;
+				idsByTitle["User (computing)".toLowerCase()] = 16301990 ;
+				idsByTitle["Film".toLowerCase()] = 21555729 ;
+				idsByTitle["Engagement".toLowerCase()] = 39386 ;
+				idsByTitle["Quest".toLowerCase()] = 188949 ;
+				idsByTitle["Reproduction".toLowerCase()] = 26310 ;
+				idsByTitle["Temporality".toLowerCase()] = 6444774 ;
+				idsByTitle["Public".toLowerCase()] = 307834 ;
+				idsByTitle["Originality".toLowerCase()] = 1127541 ;
+				idsByTitle["Saving".toLowerCase()] = 65228 ;
+				idsByTitle["Web-based experiments".toLowerCase()] = 9752206 ;
+				idsByTitle["Like".toLowerCase()] = 567140 ;
+				idsByTitle["Tourism".toLowerCase()] = 29789 ;
+				idsByTitle["Attempt".toLowerCase()] = 1559961 ;
+				idsByTitle["Combining character".toLowerCase()] = 497884 ;
+				idsByTitle["Countries of the United Kingdom".toLowerCase()] = 18508684 ;
+				idsByTitle["Search algorithm".toLowerCase()] = 28249 ;
+				idsByTitle["Regeneration (biology)".toLowerCase()] = 854081 ;
+				idsByTitle["Work of art".toLowerCase()] = 2583747 ;
+				idsByTitle["Food processing".toLowerCase()] = 602960 ;
+				idsByTitle["Content (media and publishing)".toLowerCase()] = 12766831 ;
+				idsByTitle["The Day After".toLowerCase()] = 31607 ;
+				idsByTitle["Generating set of a group".toLowerCase()] = 99945 ;
+				idsByTitle["Disapproval voting".toLowerCase()] = 295237 ;
+				idsByTitle["Holotype".toLowerCase()] = 347322 ;
+				idsByTitle["Used good".toLowerCase()] = 997664 ;
+				idsByTitle["The Play".toLowerCase()] = 1606563 ;
+				idsByTitle["And I".toLowerCase()] = 2612408 ;
+				idsByTitle["Results".toLowerCase()] = 2724372 ;
+				idsByTitle["Kimarite".toLowerCase()] = 2773330 ;
+				idsByTitle["Completely".toLowerCase()] = 2948651 ;
+				idsByTitle["Possibilities".toLowerCase()] = 4122226 ;
+				idsByTitle["Alpine skiing combined".toLowerCase()] = 4149460 ;
+				idsByTitle["Want To".toLowerCase()] = 9741824 ;
+				idsByTitle["GRaphics Animation System for Professionals".toLowerCase()] = 11338864 ;
+				idsByTitle["Batting average".toLowerCase()] = 18933273 ;
+				idsByTitle["Power in international relations".toLowerCase()] = 228753 ;
+				idsByTitle["Authentication".toLowerCase()] = 47967 ;
+				idsByTitle["Real number".toLowerCase()] = 20646438 ;
+
+addTooltipsToAllLinks($("#wiki_window")) ;
+</script>
+
+
+</body>

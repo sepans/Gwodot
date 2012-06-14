@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Raphaël · Bouncer</title>
+        <link rel="stylesheet" href="demo.css" media="screen">
+        <link rel="stylesheet" href="demo-print.css" media="print">
+        <style media="screen">
+            body {
+    color: #000;
+    font: 300 100.1% "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
+}
+
+#copy {
+    bottom: 0;
+    font: 300 .7em "Helvetica Neue", Helvetica, "Arial Unicode MS", Arial, sans-serif;
+    position: absolute;
+    right: 1em;
+    text-align: right;
+}
+#copy a {
+    color: #fff;
+}
+
+			#holder {
+                height: 800px;
+                margin: 0 auto;
+                width: 800px;
+            }
+        </style>
+        <script src="js/raphael-min.js"></script>
+
+        <script type="text/javascript">
+            window.onload = function () {
+                var r = Raphael("holder"),
+                    img = r.image("images/gwodo_bg.png", 50, 50, 400, 200),
+					run = document.getElementById("run");
+					//img.scale(2,3,10,50);
+
+
+                
+                run.onclick = function () {
+					img.animate({width: 1000, height: 500, x:0}, 2000);
+
+                };
+            };
+        </script>
+    </head>
+    <body>
+        <div id="holder"> 
+            <button id="run">Run</button>
+        </div>
+
+    </body>
+</html>

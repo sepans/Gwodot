@@ -1,0 +1,194 @@
+<html>
+<head>
+	<title>Waiting for Gwodot</title>
+		
+	<script type="text/javascript" src="js/jquery-1.4.4.js"></script>
+	<script type="text/javascript" src="js/jquery.window.min.js"></script>
+	<script src="js/wikify.js" type="text/javascript"></script>
+	<link href="css/jquery.window.css" rel="stylesheet" type="text/css"/>
+	
+	 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+	
+	<link rel="stylesheet" href="/css/wikify.css" type="text/css">
+
+<!--	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>-->
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<style type="text/css">
+		body { background-color: #FFF; padding: 0; margin: 0; color: #000; font-family:Lucida Console, Monaco, sans-serif; font-size: 12px; }
+		#container {margin: 15px auto; position: relative;}
+		.underground { border-bottom: 1px solid #FFF;  }
+		h1,h2 {font-size: 12px; font-weight: normal; display: inline; padding: 0 10px;}
+		a, a:visited {color: #000; }
+		
+		.window_panel .window_header { border: 1px solid #000 !important; background-color: #FFF;}
+		.ui-widget-header { border: 1px solid #000 !important; background-color: #FFF;}
+		
+		#desc_window { }
+		.window_container {padding: 10px; font-size: 12px;  background-color: #FFF; color: #000;}
+		
+		.defulat-link-color a {color: #00FFFF; }
+		.defulat-link-color a:visited {color: #800080 ;}
+		.footnote { font-size: 10px; border-top: 1px solid black;}
+		
+		#lucky {position: absolute; top: 120px; left: 480px; width: 300px; height: 400px; background-color: #FFF; overflow: auto;
+		padding: 5px;}
+		#lucky_lable {position: absolute; top: 100px; left: 480px;}
+		#help-slider {position: absolute; top: 120px; left: 200px; }
+		#help-slider-lable {position: absolute; top: 100px; left: 190px; font-size: 10px;}
+		#help-slider-lable b {width: 60px; float: right; } 
+		.slider { width: 200px; margin: 10px }
+		
+		#tooltip { width: 100px; background-color: #FFF;}
+		
+		.wait-for {font-size: 9px; margin: 30px 60px; display: none;}
+		
+	</style>
+	<script type="text/javascript">
+	
+	$(document).ready(function() {
+
+
+
+	  $( "#help-slider" ).slider({max: 100, value: 0,
+	   stop: function(event, ui) {
+
+			var text = $('#lucky').text();
+			//console.log(text);
+			var prob = 1-ui.value/100;
+			//console.log(prob);
+			wikifyText(text,prob);
+			$('.wait-for').fadeIn(1000);
+		}
+		});
+	});
+	
+		function wikifyText(text,probability) {
+		var wikify_url = '/proxy.php';
+		//?proxy_url='+'http://wikipedia-miner.cms.waikato.ac.nz/services/wikify?source='+text;
+		var proxy_url = '/proxy.php?proxy_url=http://wikipedia-miner.cms.waikato.ac.nz/services/wikify';
+		
+		$.post(proxy_url, {source: text.substring(0,10000), minProbability : probability, repeatMode: 'ALL',
+		responseFormat: 'DIRECT', linkFormat: 'html_id_weight', tooltips: true, },
+		//var thisi=0;
+		(function(thisi) {
+          return function(data) {
+             wikifyCallback(data, thisi);
+          };
+       }(0)) // calling the function with the current value
+    );
+
+	
+	}
+	
+	function wikifyCallback( data, inx) {
+		//console.log('xml '+data+' index '+inx);
+		$('.wait-for').fadeOut(1000);
+
+		var box = $('#lucky');
+		box.html(data);
+		box.find('a').css('color','#666');
+		box.find('a').css('text-decoration','underline');
+		box.find('a').each(function (index, element) {
+			var link = $(element).attr('href');
+			var mouseoverContent = 'showDescription('+$(element).attr('pageid')+','+index+');return false;';
+			var mouseoutContent = '$(\'#tooltip\').hide();';
+			//console.log(link);
+			//$(element).attr('#');
+			$(element).attr("target", "_blank");
+			$(element).mouseover(new Function(mouseoverContent));
+			$(element).mouseout(new Function(mouseoutContent));
+			//$(element).
+			
+		});
+	
+	}
+	
+
+	
+	function showDescription(pageid,index) {
+		//console.log($($('#lucky a')[index]));
+		showTooltip(pageid, $($('#lucky a')[index]), null);
+	}
+	
+	function showTooltip(topicId, object, linkProb) {
+		
+	var tooltip = $("#tooltip") ;
+
+	var top = object.offset().top + object.height() ;
+	var left = object.offset().left ;
+	
+	// if this is too far right to fit on page, move it to be against right side of page
+	if (left + tooltip.width() > $(window).width())
+		left = $(window).width() - tooltip.width() - 30 ;
+			
+	tooltip.css("top", top + "px") ;
+	tooltip.css("left", left + "px") ;
+	
+	tooltip.html("<div class='loading'></div>") ;
+	tooltip.show() ;
+	
+	var escapedUrl = "/proxy.php?proxy_url=http://wikipedia-miner.cms.waikato.ac.nz/services/exploreArticle?id="+topicId+"%26definition=true%26definitionLength=SHORT%26images=true%26maxImageWidth=100%26maxImageHeight=100"
+	
+	$.get(escapedUrl,  function(response){
+		processTooltipResponse(topicId, response, linkProb);
+	});	
+}
+
+function processTooltipResponse(topicId, response, linkProb) {
+	
+	var tooltip = $("#tooltip") ;
+	
+	tooltip.empty() ;
+	
+	var image = $(response).find("image") ;
+	if (image.length > 0) {
+		tooltip.append("<img src='" + image.attr("url") + "'></img>") ;
+	}
+	
+	var definition = $(response).find("definition") ;
+	if (definition.length > 0 && image.length==0) {
+		tooltip.append(definition.text()) ;
+	}
+	
+	if (linkProb != null)
+		tooltip.append("<p><em>" + linkProb + "</em> probability of being a link") ;
+	
+	$(tooltip).append("<br/>") ;
+	
+	$('#loading').hide();
+	
+}
+
+	</script>
+</head>
+<body>
+	<div id="container">
+		<h1>WAITING FOR GWODOT - A Tragicomedy in HTML</h1>
+		-<span><a href="acts.htm">continue</a></span>
+		<img class="underground" src="images/background.png" alt="underground"/><br/>
+	<div id="help-slider-lable"><b>Get Help</b><br/><- Less Description / More Description ->
+	<p class="wait-for">wait for description...</p>
+	
+	</div>
+	<div id="help-slider" class="slider"></div>
+	</div>
+	<div id="lucky_lable">Lucky Thinking:</div>
+	<div id="lucky">
+		Given the existence as uttered forth in the public works of Puncher and Wattmann of a personal God quaquaquaqua with white beard quaquaquaqua outside time without extension who from the heights of divine apathia divine athambia divine aphasia loves us dearly with some exceptions for reasons unknown but time will tell and suffers like the divine Miranda with those who for reasons unknown but time will tell are plunged in torment plunged in fire whose fire flames if that continues and who can doubt it will fire the firmament that is to say blast hell to heaven so blue still and calm so calm with a calm which even though intermittent is better than nothing but not so fast and considering what is more that as a result of the labors left unfinished crowned by the Acacacacademy of Anthropopopometry of Essy-in-Possy of Testew and Cunard it is established beyond all doubt all other doubt than that which clings to the labors of men that as a result of the labors unfinished of Testew and Cunnard it is established as hereinafter but not so fast for reasons unknown that as a result of the public works of Puncher and Wattmann it is established beyond all doubt that in view of the labors of Fartov and Belcher left unfinished for reasons unknown of Testew and Cunard left unfinished it is established what many deny that man in Possy of Testew and Cunard that man in Essy that man in short that man in brief in spite of the strides of alimentation and defecation wastes and pines wastes and pines and concurrently simultaneously what is more for reasons unknown in spite of the strides of physical culture the practice of sports such as tennis football running cycling swimming flying floating riding gliding conating camogie skating tennis of all kinds dying flying sports of all sorts autumn summer winter winter tennis of all kinds hockey of all sorts penicillin and succedanea in a word I resume flying gliding golf over nine and eighteen holes tennis of all sorts in a word for reasons unknown in Feckham Peckham Fulham Clapham namely concurrently simultaneously what is more for reasons unknown but time will tell fades away I resume Fulham Clapham in a word the dead loss per head since the death of Bishop Berkeley being to the tune of one inch four ounce per head approximately by and large more or less to the nearest decimal good measure round figures stark naked in the stockinged feet in Connemara in a word for reasons unknown no matter what matter the facts are there and considering what is more much more grave that in the light of the labors lost of Steinweg and Peterman it appears what is more much more grave that in the light the light the light of the labors lost of Steinweg and Peterman that in the plains in the mountains by the seas by the rivers running water running fire the air is the same and then the earth namely the air and then the earth in the great cold the great dark the air and the earth abode of stones in the great cold alas alas in the year of their Lord six hundred and something the air the earth the sea the earth abode of stones in the great deeps the great cold on sea on land and in the air I resume for reasons unknown in spite of the tennis the facts are there but time will tell I resume alas alas on on in short in fine on on abode of stones who can doubt it I resume but not so fast I resume the skull fading fading fading and concurrently simultaneously what is more for reasons unknown in spite of the tennis on on the beard the flames the tears the stones so blue so calm alas alas on on the skull the skull the skull the skull in Connemara in spite of the tennis the labors abandoned left unfinished graver still abode of stones in a word I resume alas alas abandoned unfinished the skull the skull in Connemara in spite of the tennis the skull alas the stones Cunard (mêlée, final vociferations)
+	</div>
+	<div id="tooltip"></div>
+	<p style="font-size: 9px; margin-left: 10px;">(Description are automatically pulled from Wikipedia using <a href="http://wikipedia-miner.cms.waikato.ac.nz/services/?wikify" target="_blank">Wikifying</a> algorithm.)</p>
+
+
+	</div>
+
+	</div>
+	
+	
+
+</div>
+	
+
+
+
+</body>

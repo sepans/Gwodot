@@ -1,0 +1,130 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Waiting for Gwodot - A Tragicomedy in HTML</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="js/swfobject.js"></script>
+
+ <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <style type="text/css">
+		body { background-color: #FFF; padding: 0; margin: 0; color: #000; font-family:Lucida Console, Monaco, sans-serif; font-size: 12px; }
+
+		#main { 
+		margin: 10px;
+		width: 800px;
+		height: 600px;
+		border: 1px solid white; 
+		background: url('images/background.png') 100% 0% no-repeat;
+		}
+		#container { margin: 10px 20px; position: absolute; top:0; left:0; width: 900px; overflow: hidden;
+		
+		}
+		#photos { width: 900px; margin: 0 10px; padding: 0; background: url('images/background.png') 0 -15px repeat-y; min-height: 580px;}
+		#photos li {list-style: none; display:inline; margin: 0; padding: 0}
+		img {border: 0px; }
+		h1, h2 {z-index: 100; position: relative; margin: 0px;}
+		p { padding: 1px 5px;}
+		.title {position: absolute;}
+		h1,h2 {font-size: 12px; font-weight: normal; display: inline; padding: 0 10px;}
+		a, a:visited {color: #000; }
+		.desc { padding: 10px; font-size: 11px;}
+  </style>
+  <script>
+  $(document).ready(function() {
+
+ 		var url_tagged = 'http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=83ba15f0b4d443a1d2fd0e3f70211ecd&tags=nothing+to+be+done,godot&extras=url_t&sort=relevance&per_page=1000&format=json&jsoncallback=?';
+		var url_qoate = 'http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=83ba15f0b4d443a1d2fd0e3f70211ecd&text=%22nothing+to+be+done%22&extras=url_t&sort=relevance&per_page=1000&format=json&jsoncallback=?';
+		
+		var url_twitter = '/proxy.php?proxy_url=http://search.twitter.com/search.json?q=-eliot+%22nothing+to+be+done%22%26rpp=100';
+		var url_twitter2 = '/proxy.php?proxy_url=http://search.twitter.com/search.json?q=css';
+		
+		
+
+		$.getJSON(url_qoate, addImages );
+	
+
+	//$.getJSON(url_tagged, addImages );
+	//	$.getJSON(url_qoate, addImages );
+		
+		//$.getJSON(url_twitter2, addTweets );
+		
+
+	
+	});
+	
+	
+	function addImages(data)
+	{	
+	//	jQuery.each(data.photos.photo,function() {setTimeout(function (this) {addSingleImage(element)},500)});
+		var html=$('#photos').html();
+		var count=0;
+		var allCount = 5;
+		jQuery.each(data.photos.photo,function()
+		{
+			var myTimeout = (count+Math.floor(Math.random()*5))*100;
+			console.log(myTimeout);
+			var fileName= this.url_t;
+			var id =this.id;
+			
+			setTimeout(function(){ addImage(id,fileName)}, myTimeout);
+			
+
+			count++;
+		});
+		$('#photos').html(html);
+	}
+	
+	function addImage(id,filename) {
+	
+			emptyCount = Math.round(Math.random(1,100));
+			var rand = 2+Math.floor(Math.random()*6);
+
+			for(var i=0;i<rand;i++) {
+				// rand = 3+Math.floor(Math.random()*10);
+				$('<li><img class="no-img" src=\"http://sepans.com/no.png\" height=\"30px\"/></li>').delay(rand*200).fadeIn(200).appendTo('#photos');
+				//allCount++;
+			}
+
+			//if(count<225)
+			$('<li id=\"'+this.id+'\"><img class="no-img" src=\"'+filename+'\" height=\"30px\"/></li>').delay(rand*200).fadeIn(200).appendTo('#photos');
+			//console.log(count+' '+this.url_t);
+			//allCount++;
+	}
+
+	
+	
+	
+	
+
+
+	</script>
+	
+</head>
+<body> 
+	<div id="container">
+		<h1>WAITING FOR GWODOT - A Tragicomedy in HTML</h1>
+		<ul id="photos"></ul>
+		<p>ESTRAGON: Nothing to be done.</p>
+		<p>VLADIMIR: I'm beginning to come round to that opinion. All my life I've tried to put it from me, saying Vladimir,
+		be reasonable, you haven't yet tried everything. And I resumed the struggle.</p>
+		<p><a href="acts.htm">continue</a></p>
+		<p style="font-size: 9px;">(Images tagged with 'Nothing to be done' on Flickr.)</p>
+
+	</div>
+	<!--<div id="main">
+	<ul id="photos"></ul>
+	<p>Nothing to be done.</p>
+	<p>I'm beginning to come round to that opinion. All my life I've tried to put it from me, saying Vladimir,
+	be reasonable, you haven't yet tried everything. And I resumed the struggle.</p>
+	<h1>Waiting for Gwodot</h1>
+	<h2>A Tragicomedy in HTML</h2>
+	<span><a href="acts.htm">- play</a></span>
+	
+	<ul id="tweets"></ul>-->
+
+	
+	
+</body>
+</html>
+

@@ -1,0 +1,188 @@
+<html>
+<head>
+	<title>Waiting for Gwodot</title>
+		
+	<script type="text/javascript" src="js/jquery-1.4.4.js"></script>
+	
+	<script type="text/javascript" src="js/dialogs.js"></script>
+	<script type="text/javascript" src="js/utils.js"></script>
+	
+
+<!--	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>-->
+	
+	<style type="text/css">
+		body { background-color: #FFF; padding: 0; margin: 0; color: #000; font-family:Lucida Console, Monaco, sans-serif; font-size: 12px; }
+		#container {margin: 0 auto; position: relative;}
+		.underground { border-bottom: 1px solid #FFF;  }
+		h1,h2 {font-size: 12px; font-weight: normal; display: inline; padding: 0 10px;}
+		a, a:visited {color: #000; }
+		
+		.window_panel .window_header { border: 1px solid #000 !important; background-color: #FFF;}
+		.ui-widget-header { border: 1px solid #000 !important; background-color: #FFF;}
+		
+		#desc_window { }
+		.window_container {padding: 10px; font-size: 12px;  background-color: #FFF; color: #000;}
+		.loading { margin: 100px 180px;}
+		.defulat-link-color a {color: #00FFFF; }
+		.defulat-link-color a:visited {color: #800080 ;}
+		.footnote { font-size: 10px; border-top: 1px solid black;}
+		.desc { padding: 10px; font-size: 11px;}
+	
+		#dialogs { list-style: none; position: absolute; top: 30px; left: 270px; background-color: #FFF; padding: 0; width: 550px;}
+		#dialogs li {margin: 11px 0;}
+		#dialogs li a {margin-right: 20px;}
+		
+	</style>
+	<script type="text/javascript">
+		var act;
+		var actSentences;
+		var audioChanell;
+		$(document).ready(function() {
+			act = queryString()['actNum'];
+			if(act%2==1) {
+				actSentences = act1Beg;
+				$('#act2desc').hide();
+			} else {
+				actSentences = act2Beg;			
+				$('#act1desc').hide();
+			}
+			showDialogs(0,12);
+			
+			
+			setTimeout(function() {showMore(13,actSentences.length)},15*6*1000);
+
+
+			
+			
+			// Handler for .ready() called.
+		});
+		
+		
+		
+		function showDialogs(from, to) {
+			for(var i=from;i<to;i++) {
+				var character = (i%2==1) ? 'Vlad' : 'Est';
+				var length = (actSentences[i].length>80) ? actSentences[i].length*0.9 : actSentences[i].length*2;// Math.min(actSentences[i].length*2,170);;
+				var begining = actSentences[i].substring(0,10);
+				var order = 7;
+				$.ajax({
+					url: 'markov.php?character='+character+'&length='+length+'&begining='+begining+'&order='+order+'&act='+act,
+					success: function(thisi) {
+						return function(data) {
+						handleDialog(data, thisi-from);
+						};
+					}(i)
+				});
+			
+			}
+		
+		}
+		
+		function handleDialog(data, i) {
+			var sentence = processSentence(data);
+			var delay= i*6000;
+			if((i==2 || i==4) && (i%2==1))
+				delay=i*9000;
+			setTimeout(function(){addSentence(i,sentence)}, delay);
+			/*if(i==0) {
+				audioChanell = new Audio();						
+		
+				audioChanell.src = "http://translate.google.com/translate_tts?tl=en&q="+sentence;
+				console.log("loading audio");
+				audioChanell.load();
+				audioChanell.play();
+				//setTimeout(function(){audioChanell.play()}, delay);
+			}*/
+			//console.log(i+data);
+		}
+		
+		function processSentence(data) {
+			
+			var sentence = data.replace('\\\'','\'');
+			var sentence = sentence.replace('Godot','Gwodot');
+			var sentence = sentence.replace(' aga ',' again ');
+			var sentence = sentence.replace(' an.',' touch me.');
+			var sentence = sentence.replace(' y ',' you ');
+			var lastStop = Math.max(sentence.lastIndexOf('.'),sentence.lastIndexOf('?'));
+			if(lastStop==0)
+				lastStop=sentence.length/2;
+			//console.log(lastStop);
+			sentence=sentence.substring(0,lastStop+1);
+			//console.log(data+' '+sentence);
+			return sentence;
+		
+		}
+		
+		function addSentence(i,sentence) {
+			
+			$('<li>'+((i%2==1) ? 'Vladimir' : 'Estragon')+": "+sentence+'</li>').fadeIn(1000).appendTo('#dialogs');
+			//console.log($('#dialogs').children());
+		}
+		
+		function moreDialogs(from,to) {
+			
+			showDialogs(from,to);
+			$('#dialogs li:last-child').fadeOut(1000);
+			return false;
+		}
+
+		function showMore(from,to) {
+			
+			$('<li><a href="#" onclick="moreDialogs('+from+','+to+');return false;">more</a><a href="#" onclick="openPage()">enough</a></li>').fadeIn(1000).appendTo('#dialogs');
+		}
+		
+
+		/*function showLess(from,to) {
+			
+			$('<li><a href="#" onclick="openPage()">enough</a></li>').fadeIn(1000).appendTo('#dialogs');
+		}*/
+
+		function openPage() {
+		
+		var actNum = Math.floor(Math.random()*4);
+		//console.log(actNum);
+		if(actNum==0) {
+			document.location = 'lucky.htm';
+		}
+		else if(actNum==1){
+			document.location = 'nothing.htm';
+		}
+		else if(actNum==2){
+			document.location = 'createGodot.htm';
+		}
+		else if(actNum==3){
+			document.location = 'screen.htm';
+		}
+		
+		return false;
+	}
+		
+	</script>
+</head>
+<body>
+	<div id="container">
+		<img class="underground" src="images/background.png" alt="underground"/><br/>
+		<!--<h1>WAITING FOR GWODOT - A Tragicomedy in HTML</h1>
+		<div class="desc">A remediation of Beckett's play for web - <a href="acts.htm">play</a></div>-->
+		<ul id="dialogs">
+			<li style="width: 550px; "><a style="float: right" href="#" onclick="openPage()">enough</a></li>
+			<li id="act1desc" style="margin-bottom: 25px;">A country road. A tree. Evening.</li>
+			<li id="act2desc" style="margin-bottom: 25px;">Next day. Same time. Same Place.</li>
+		</ul>
+
+	</div>
+	<p style="font-size: 9px; margin-left: 10px;">(Dialogs are generated on the fly for each act specifically)</p>
+
+
+	</div>
+
+	</div>
+	
+	
+<div class="loading"></div>
+</div>
+	
+
+
+
+</body>

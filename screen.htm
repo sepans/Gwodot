@@ -1,0 +1,89 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Waiting for Gwodot - A Tragicomedy in HTML</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="js/swfobject.js"></script>
+
+ <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <style type="text/css">
+		body { background-color: #FFF; padding: 0; margin: 0; color: #000; font-family:Lucida Console, Monaco, sans-serif; font-size: 12px; }
+
+		#main { 
+		margin: 10px;
+		width: 800px;
+		height: 600px;
+		border: 1px solid white; 
+		background: url('images/background.png') 100% 0% no-repeat;
+		}
+		#container { margin: 10px 20px; position: absolute; top:0; left:0; width: 900px; overflow: hidden;
+		
+		}
+		#photos { width: 900px; margin: 0 10px; padding: 0; background: url('images/background.png') 0 -15px repeat-y; min-height: 580px;}
+		#photos li {list-style: none; display:inline; margin: 0; padding: 0}
+		img {border: 0px; }
+		h1, h2 {z-index: 100; position: relative; margin: 0px;}
+		p { padding: 1px 5px;}
+		.title {position: absolute;}
+		h1,h2 {font-size: 12px; font-weight: normal; display: inline; padding: 0 10px;}
+		a, a:visited {color: #000; }
+		.desc { padding: 10px; font-size: 11px;}
+  </style>
+  <script>
+  $(document).ready(function() {
+
+		//setTimeout($('body').css('background-color','#000'),1000);
+		setTimeout(function(){$('body').css('background-color','#000');}, 17500);
+		setTimeout(function(){$('body').css('background-color','#FFF');}, 17700);
+		setTimeout(function(){$('body').css('background-color','#000');$('#photos').css('background','#000');}, 18000);
+		//setTimeout(function(){$('body').css('background-color','#FFF');$('#photos').css('background','#FFF');}, 3500);
+		//setTimeout(function(){$('body').css('background-color','#FFF');$('#photos').css('background','#000');}, 4000);
+		setTimeout(function(){document.location='http://sepans.com/gwodot/acts.htm'}, 38000);
+
+	
+	});
+	
+	
+	
+
+	
+	
+	
+	
+
+
+	</script>
+	
+</head>
+<body> 
+	<div id="container">
+		<h1>WAITING FOR GWODOT - A Tragicomedy in HTML</h1>
+		<ul id="photos"></ul>
+		<p>VLADIMIR:
+			We are no longer alone, waiting for the night, waiting for Godot, waiting for . . . waiting. All evening we have struggled, unassisted. Now it's over. It's already tomorrow. </p>
+		<p>
+POZZO:
+    Help! </p>
+<p>VLADIMIR:
+    Time flows again already. The sun will set, the moon rise, and we away . . . from here. 
+		
+		</p>
+
+	</div>
+	<!--<div id="main">
+	<ul id="photos"></ul>
+	<p>Nothing to be done.</p>
+	<p>I'm beginning to come round to that opinion. All my life I've tried to put it from me, saying Vladimir,
+	be reasonable, you haven't yet tried everything. And I resumed the struggle.</p>
+	<h1>Waiting for Gwodot</h1>
+	<h2>A Tragicomedy in HTML</h2>
+	<span><a href="acts.htm">- play</a></span>
+	
+	<ul id="tweets"></ul>-->
+
+	
+	
+</body>
+</html>
+

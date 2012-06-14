@@ -1,0 +1,142 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Waiting for Gwodot - A Tragicomedy in HTML</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="js/swfobject.js"></script>
+
+ <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <style type="text/css">
+		body{ font-family:Lucida Console, Monaco, sans-serif; font-size: 12px;  margin: 30px; background: #FFF;}
+		h1 {font-size: 1.0em; margin:0; font-weight: normal;}
+		h2 {font-size: 1em; margin:0;}
+		#acts_main { 
+		margin: 10px;
+		width: 800px;
+		height: 600px;
+		/*border: 1px solid white; 
+		background: url('images/background.png') 100% 0% no-repeat;*/
+		}
+		
+		.object {position: absolute; /*display: block;*/ z-index: 1;}
+		.boot { width: 60px;  height:60px; top: 204px; left: 69px; /*background : url('images/boots_small.png');*/ }
+		.hat { width: 50px; top: 180px; left: 114px; /*background : url('images/hat_small.png');*/  opacity: .8;}
+		.leaf { width: 30px; top: 36px; left: 56px; /*background : url('images/leaf_small.png');*/ }
+		.loading { z-index: 0;}
+		#avatar {float: left; width: 300px;}
+		#act-list { list-style-type: none; width: 1000px; height: 450px;  overflow-y: scroll;}
+		#act-list li { width: 450px; height: 263px; font-size: 14px;
+		background: url('images/background_small.png') 0% 0% no-repeat; display: inline-block;
+		margin: 0 40px 20px 0; position: relative;
+		}
+		#act-list li a { width: 450px; height: 263px; display: block;}
+		a { text-decoration: none; color: #444;}
+		a:visited { text-decoration: none; color: #444;}
+  </style>
+  <script type="text/javascript" >
+  var numberOfActs = 0;
+  var hatPositions = [[180,114],[158,109],[162,125],[148,148]];
+  var bootPositions = [[204,69],[211,7],[221,244],[222,170]];
+  var leafPositions = [[36,73],[71,63],[60,98],[127,50],[100,53],[147,78],[127,78],[147,32],[74,88]];
+  $(document).ready(function() {
+
+			addActs();
+			addActs();
+  
+	//$("#act-list").scrollTop(30);
+		//console.log('doc ready');
+
+	$("#act-list").scroll(function () { 
+		var divSize = 450;
+		//console.log('scroll');
+		//console.log($("#act-list").scrollTop()+" "+$("#act-list")[0].scrollHeight);//566
+       if(divSize +$("#act-list").scrollTop() == $("#act-list")[0].scrollHeight)
+	   {
+			addActs();
+	   }
+		
+    });
+	
+});	
+	
+	function addActs() {
+		console.log('adding acts');
+
+		$('#act-list').append('<li><a href="#" onclick="openAct('+(numberOfActs+1)+');return false;"><span>Act '+(numberOfActs+1)+'</span></a></li>');
+		var firstClone = $('#act-list li').last();
+		$('#act-list').append('<li><a href="#" onclick="openAct('+(numberOfActs+2)+');return false;"><span>Act '+(numberOfActs+2)+'</span></a></li>');
+		var secondClone = $('#act-list li').last();
+
+		addObject(secondClone,'hat',1);
+		addObject(secondClone,'leaf',4+Math.round(Math.random()*2));
+		addObject(secondClone,'boot',1);
+
+		addObject(firstClone,'loading',1);
+		addObject(secondClone,'loading',1);
+
+		$(firstClone).css('display','none');
+		$(secondClone).css('display','none');
+		$(firstClone).fadeIn(2000);
+		$(secondClone).fadeIn(2000);
+
+		numberOfActs+=2;
+	}
+	
+	function addObject(element,object,number) {
+		var image;
+		var positions;
+		switch(object) {
+			case 'hat': image = '<img class="hat object" src="images/hat_small.png"/>'; positions=hatPositions; break;
+			case 'boot': image = '<img class="boot object" src="images/boots_small.png"/>'; positions=bootPositions; break;
+			case 'leaf': image = '<img class="leaf object" src="images/leaf_small.png"/>'; positions=leafPositions; break;
+			case 'loading': image = '<img class="loading object" src="images/loading.gif"/>'; positions=leafPositions; break;
+		}
+		for(var i=0;i<number;i++) {
+			$(element).append(image);
+			var addedImage = $(element).find('img').last();
+			var randomIndex = Math.min(Math.round(Math.random()*positions.length),positions.length-1);
+			console.log(object+' '+randomIndex+' length '+positions.length);
+			//console.log(positions[randomIndex]);
+			$(addedImage).css('top',positions[randomIndex][0]);
+			$(addedImage).css('left',positions[randomIndex][1]);
+			
+			
+			
+		}
+	}
+	
+	function openAct(actNum) {
+	
+		/*if(actNum%3==0) {
+			document.location = 'lucky.htm';
+		}
+		else if(actNum%3==1){
+			document.location = 'nothing.htm';
+		}
+		else if(actNum%3==2){
+			document.location = 'createGodot.htm';
+		}*/
+		
+		document.location = 'dialog.htm?actNum='+actNum;
+		
+		return false;
+	}
+	
+
+
+
+		</script>
+	
+</head>
+<body> 
+	<div id="acts_main">
+		<h1>WAITING FOR GWODOT - A Tragicomedy in HTML</h1>
+	<ul id="act-list">
+
+	</ul>
+	
+	</div>
+</body>
+</html>
+

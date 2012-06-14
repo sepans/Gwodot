@@ -1,0 +1,149 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Design Gwodot</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="js/swfobject.js"></script>
+	
+	<link href="style.css" rel="stylesheet" type="text/css"/>
+
+ <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <style type="text/css">
+		body{ font-family:Lucida Console, Monaco, sans-serif; margin: 0px 30px; font-size: 12px;}
+		#container { width: 800px;}
+		.slider { width: 200px; margin: 10px }
+		#params { padding: 20px 0 0 250px;  width: 560px; height: 470px;}
+		#avatar {float: right; margin-right: 80px;margin-top: 20px; }
+		.ui-slider-handle{background: url('images/res7.gif') no-repeat 0 0 !important; border: 0px !important;}
+		.ui-widget-content {border: 0px; border-bottom: 1px solid black;}
+		.colorPick {background: url('images/res3.gif') no-repeat -8px -3px; border: 0;}
+		.underground {position: absolute; top: 20px; left: 10px; z-index: -1;}
+		.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {border-radius: 0px;}
+		a, a:visited {color: #000; }
+
+  </style>
+
+	<script type="text/javascript">
+		  var avatarSWF;
+
+		//<![CDATA[
+		swfobject.embedSWF("myavatarcharacter.swf", "avatarSWFContainer", "190", "300", "10.0.0", null, {hosted:true});
+		
+		
+		//]]>
+	</script>
+	
+</head>
+<body> 
+	<div id="container">
+		<img class="underground" src="images/background.png" alt="underground"/><br/>
+		<!--<h1>WAITING FOR GWODOT - A Tragicomedy in HTML</h1>
+		<div class="desc">A remediation of Beckett's play for web - <a href="acts.htm">play</a></div>-->
+
+	<h3>Create Godot</h3>
+	<p>Please note your designed Gwodot will be lost as you leave this page.<a style="margin-left: 10px;" href="acts.htm">continue</a></p>
+	<div id="avatar">
+		<div id="avatarSWFContainer">Adobe Flash is required to design Gwodot.</div>
+	</div>
+	<div id="params">
+		Weight: 
+		<div id="weight-slider" class="slider"></div>
+		Height: 
+		<div id="height-slider" class="slider" ></div>
+		Eye: 
+		<div id="eye-slider" class="slider" ></div>
+		Skin Color:
+		<div class="skin_colors">
+			<span id="color1" class="colorPick" style="background-color: #efdace " onclick="changeColor(3,true);"></span>
+			<span id="color2" class="colorPick" style="background-color: #f4cfa1" onclick="changeColor(1,true);"></span>
+			<span id="color3" class="colorPick" style="background-color: #e0a96d" onclick="changeColor(2,true);"></span>
+			<span id="color4" class="colorPick" style="background-color: #b8754c" onclick="changeColor(4,true);"></span>
+			<span id="color5" class="colorPick" style="background-color: #6b4930" onclick="changeColor(5,true);"></span>
+		</div>
+		Hair: 
+		<div id="hair-slider" class="slider" ></div>
+		Hair Color:
+		<div class="skin_colors">
+			<span id="color1" class="colorPick" style="background-color: #323232 " onclick="changeColor(0,false);"></span>
+			<span id="color2" class="colorPick" style="background-color: #4a3523" onclick="changeColor(1,false);"></span>
+			<span id="color3" class="colorPick" style="background-color: #87888a" onclick="changeColor(4,false);"></span>
+			<span id="color4" class="colorPick" style="background-color: #95763e" onclick="changeColor(6,false);"></span>
+			<span id="color5" class="colorPick" style="background-color: #cbb177" onclick="changeColor(7,false);"></span>
+		</div>
+	</div>
+	</div>	
+	
+
+	
+	  <script type="text/javascript">
+  function setupSWF() {
+	avatarSWF.setAvatarHex("205000520061006e0064006f006d00000000000000003e4119873ecdc2428998ac00524008c0425c4070a88055587c8e302f724b1c98004d004100450000000000000000000000000000");
+	avatarSWF.draw();
+  
+  }
+  $(document).ready(function() {
+
+   avatarSWF = document.getElementById('avatarSWFContainer');
+   
+	//alert('');	
+	setTimeout(setupSWF,200);
+
+
+
+  $( "#weight-slider" ).slider({max: 150, value: 75,
+   slide: function(event, ui) {
+   //alert('change'); 
+   //alert(ui.value);
+   avatarSWF.setAvatarValue("weight", ui.value);
+   //alert(avatarSWF.getAvatarValue("faceType"));
+   avatarSWF.draw();
+   }
+});
+
+ $( "#height-slider" ).slider({max: 150, value: 75,
+   slide: function(event, ui) {
+   //alert('change'); 
+   //alert(ui.value);
+   avatarSWF.setAvatarValue("height", ui.value);
+   //alert(avatarSWF.getAvatarValue("faceType"));
+   avatarSWF.draw();
+   }
+});
+
+ $( "#eye-slider" ).slider({max:48 , value: 9,
+   slide: function(event, ui) {
+   //alert('change'); 
+   //alert(ui.value);
+   avatarSWF.setAvatarValue("eyeType", ui.value);
+   //alert(avatarSWF.getAvatarValue("faceType"));
+   avatarSWF.draw();
+   }
+});
+
+ $( "#hair-slider" ).slider({max:80 , value: 9,
+   slide: function(event, ui) {
+   //alert('change'); 
+   //alert(ui.value);
+   avatarSWF.setAvatarValue("hairType", ui.value);
+   //alert(avatarSWF.getAvatarValue("faceType"));
+   avatarSWF.draw();
+   }
+});
+});
+function changeColor( color, skin)
+{
+	if(skin)
+		avatarSWF.setAvatarValue('skinColor',color);
+	else
+	{
+		avatarSWF.setAvatarValue('hairColor',color);
+		avatarSWF.setAvatarValue('beardColor',color);
+	}
+	avatarSWF.draw();
+}
+/*alert(change);var avatarSWF = document.getElementById('avatarSWFContainer');avatarSWF.setAvatarValue("weight", ui.value);*/
+  </script>
+</body>
+</html>
+
