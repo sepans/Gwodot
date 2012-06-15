@@ -13,7 +13,7 @@
 	<style type="text/css">
 		body { background-color: #FFF; padding: 0; margin: 0; color: #000; font-family:Lucida Console, Monaco, sans-serif; font-size: 12px; }
 		#container {margin: 0 auto; position: relative;}
-		.underground { border-bottom: 1px solid #FFF;  }
+		.underground { border-bottom: 1px solid #FFF; opacity: 1	; }
 		h1,h2 {font-size: 12px; font-weight: normal; display: inline; padding: 0 10px;}
 		a, a:visited {color: #000; }
 		
@@ -28,15 +28,29 @@
 		.footnote { font-size: 10px; border-top: 1px solid black;}
 		.desc { padding: 10px; font-size: 11px;}
 	
-		#dialogs { list-style: none; position: absolute; top: 30px; left: 270px; background-color: #FFF; padding: 0; width: 550px;}
-		#dialogs li {margin: 11px 0;}
+		#dialogs { list-style: none; position: absolute; top: 30px; left: 270px; padding: 0; width: 700px; }
+		#dialogs li {margin: 9px 0;}
 		#dialogs li a {margin-right: 20px;}
+		.leaf {position: absolute; display:none; z-index: 2;}
 		
 	</style>
 	<script type="text/javascript">
+
+
+		if (typeof String.prototype.startsWith != 'function') {
+		  String.prototype.startsWith = function (str){
+		    return this.indexOf(str) == 0;
+  			};
+		}
+
 		var act;
 		var actSentences;
 		var audioChanell;
+		var dialog = [];
+		var confirmations = ['Exactly!','Precisely!','[Pause]'];
+
+		var order = 7;
+
 		$(document).ready(function() {
 			act = queryString()['actNum'];
 			if(act%2==1) {
@@ -45,11 +59,12 @@
 			} else {
 				actSentences = act2Beg;			
 				$('#act1desc').hide();
+				$('.leaf').show();
 			}
-			showDialogs(0,12);
+			showDialogs(0,20);
 			
 			
-			setTimeout(function() {showMore(13,actSentences.length)},15*6*1000);
+			//setTimeout(function() {showMore(13,actSentences.length)},15*6*1000);
 
 
 			
@@ -63,8 +78,14 @@
 			for(var i=from;i<to;i++) {
 				var character = (i%2==1) ? 'Vlad' : 'Est';
 				var length = (actSentences[i].length>80) ? actSentences[i].length*0.9 : actSentences[i].length*2;// Math.min(actSentences[i].length*2,170);;
-				var begining = actSentences[i].substring(0,10);
-				var order = 7;
+				var begining = actSentences[i].substring(0,15);
+				/* no effect, chopped in php
+				if(actSentences[i].startsWith('Did I') || actSentences[i].startsWith('Don\'t ')) {
+					console.log('longer for '+i);
+					begining = actSentences[i].substring(0,20);
+				}
+				*/
+				scheduleDialog(i);
 				$.ajax({
 					url: 'markov.php?character='+character+'&length='+length+'&begining='+begining+'&order='+order+'&act='+act,
 					success: function(thisi) {
@@ -77,13 +98,15 @@
 			}
 		
 		}
-		
 		function handleDialog(data, i) {
-			var sentence = processSentence(data);
-			var delay= i*6000;
+			dialog[i]=data;
+		}
+		function scheduleDialog(i) {
+			//var sentence = processSentence(i);
+			var delay= i*3000-Math.abs(Math.random()-0.4)*1000+3000;
 			if((i==2 || i==4) && (i%2==1))
 				delay=i*9000;
-			setTimeout(function(){addSentence(i,sentence)}, delay);
+			setTimeout(function(){processSentence(i)}, delay);
 			/*if(i==0) {
 				audioChanell = new Audio();						
 		
@@ -96,26 +119,70 @@
 			//console.log(i+data);
 		}
 		
-		function processSentence(data) {
-			
+		function processSentence(i) {
+			var data=dialog[i];
+			console.log(i+' '+data);
+			if(!data) {
+				console.log('no data 1');
+				if(i>2) {
+					conf = Math.floor(Math.random()*confirmations.length);
+					console.log('conf '+conf);
+					addSentence(i, confirmations[conf]);
+				}
+				else {
+					addSentence(i, actSentences[i]);	
+				}			
+				return;
+			}
 			var sentence = data.replace('\\\'','\'');
 			var sentence = sentence.replace('Godot','Gwodot');
 			var sentence = sentence.replace(' aga ',' again ');
 			var sentence = sentence.replace(' an.',' touch me.');
 			var sentence = sentence.replace(' y ',' you ');
-			var lastStop = Math.max(sentence.lastIndexOf('.'),sentence.lastIndexOf('?'));
-			if(lastStop==0)
-				lastStop=sentence.length/2;
+			var sentence = sentence.replace(' ou ',' you ');
+			var lastStop = Math.max(sentence.lastIndexOf('.'),sentence.lastIndexOf('?'),sentence.lastIndexOf('!'));
+			if(lastStop<4) {
+//				lastStop=sentence.length/2;
+				console.log('no data 2');
+				if(i>2) {
+					conf = Math.floor(Math.random()*confirmations.length);
+					console.log('conf '+conf);
+					addSentence(i, confirmations[conf]);
+				}
+				else {
+					addSentence(i, actSentences[i]);	
+				}			
+				return;
+
+			}
+			var rand =Math.random()+(10-i)/20;
+			if(act%2==1 && i==0)
+				rand-=0.4;
+			if(act>2)
+				rand-=(act)/20;			
+			console.log(rand);
+			if(rand>0.7) {
+				console.log('no change');
+				addSentence(i, actSentences[i]);				
+				return;
+			
+			}
 			//console.log(lastStop);
 			sentence=sentence.substring(0,lastStop+1);
 			//console.log(data+' '+sentence);
-			return sentence;
+			addSentence(i,sentence);
+			//return sentence;
 		
 		}
 		
 		function addSentence(i,sentence) {
+			//console.log('adding '+sentence);
 			
-			$('<li>'+((i%2==1) ? 'Vladimir' : 'Estragon')+": "+sentence+'</li>').fadeIn(1000).appendTo('#dialogs');
+			$('.underground').css('opacity',1-i/20);
+			if(i==17)
+				$('#dialogs').css('line-height','10px;');
+			var margin = Math.round(Math.random()*10);
+			$('<li style="margin-left: '+margin+'px;">'+((i%2==1) ? 'Vladimir' : 'Estragon')+": "+sentence+'</li>').fadeIn(200).appendTo('#dialogs');
 			//console.log($('#dialogs').children());
 		}
 		
@@ -161,17 +228,20 @@
 </head>
 <body>
 	<div id="container">
+		<img class="leaf" style="top: 160px; ;left: 150px" src="images/leaf_small.png"/>
+		<img class="leaf" style="top: 300px; ;left: 130px" src="images/leaf_small.png"/>
+		<img class="leaf" style="top: 120px; ;left: 180px" src="images/loading.gif"/>
 		<img class="underground" src="images/background.png" alt="underground"/><br/>
 		<!--<h1>WAITING FOR GWODOT - A Tragicomedy in HTML</h1>
 		<div class="desc">A remediation of Beckett's play for web - <a href="acts.htm">play</a></div>-->
 		<ul id="dialogs">
-			<li style="width: 550px; "><a style="float: right" href="#" onclick="openPage()">enough</a></li>
+			<li style="width: 550px; "><a style="float: right" href="#" onclick="openPage()">Vladimir exits to piss</a></li>
 			<li id="act1desc" style="margin-bottom: 25px;">A country road. A tree. Evening.</li>
 			<li id="act2desc" style="margin-bottom: 25px;">Next day. Same time. Same Place.</li>
 		</ul>
 
 	</div>
-	<p style="font-size: 9px; margin-left: 10px;">(Dialogs are generated on the fly for each act specifically)</p>
+	<p style="font-size: 9px; margin-left: 10px;">(Dialogs are generated based on context algoritmically)</p>
 
 
 	</div>
